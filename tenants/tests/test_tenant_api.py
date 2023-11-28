@@ -119,7 +119,7 @@ class PrivateTenantApiTests(TestCase):
             name='Test Name',
         )
         self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.tenant)
 
     def test_retrieve_profile_success(self):
         """Test retrieving profile for logged in tenant."""

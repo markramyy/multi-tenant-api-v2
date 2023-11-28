@@ -36,6 +36,11 @@ def create_item(tenant, **params):
     return item
 
 
+def create_tenant(**params):
+    """Create and return a new tenant."""
+    return get_user_model().objects.create_user(**params)
+
+
 class PublicItemApiTests(TestCase):
     """Test Unauthenticated API requests."""
 
@@ -54,10 +59,7 @@ class PrivateItemApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.tenant = get_user_model().objects.create_user(
-            'tenant@example.com',
-            'testpass123',
-        )
+        self.tenant = create_tenant(email='tenant@example.com', password='test123')
         self.client.force_authenticate(self.tenant)
 
     def test_retrieve_items(self):
@@ -74,10 +76,7 @@ class PrivateItemApiTests(TestCase):
 
     def test_items_limited_to_tenant(self):
         """Test list of items is limited to the authenticated tenant."""
-        other_tenant = get_user_model().objects.create_user(
-            'other@example.com',
-            'password123',
-        )
+        other_tenant = create_tenant(email='other@example.com', password='password123')
         create_item(tenant=other_tenant)
         create_item(tenant=self.tenant)
 
@@ -111,4 +110,19 @@ class PrivateItemApiTests(TestCase):
         item = Item.objects.get(id=res.data['id']) # retrieve the item from the database
         for key in payload.keys():
             self.assertEqual(payload[key], getattr(item, key)) # retrieve the value of the attribute
+        self.assertEqual(item.tenant, self.tenant)
+
+    def test_partial_update_item(self):
+        """Test updating an item with patch."""
+        original_price = Decimal('5.00')
+        item = create_item(tenant=self.tenant, name='Item Name', price=original_price)
+
+        payload = {'name': 'New Item Name'}
+        url = detail_url(item.id)
+        res = self.client.patch(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        item.refresh_from_db()
+        self.assertEqual(item.name, payload['name'])
+        self.assertEqual(item.price, original_price)
         self.assertEqual(item.tenant, self.tenant)

@@ -1,3 +1,11 @@
-from django.shortcuts import render
+"""
+Views for the tenant API.
+"""
+from rest_framework import generics
 
-# Create your views here.
+from tenants.serializers import TenantSerializer
+
+
+class CreateTenantView(generics.CreateAPIView):
+    """Create a new tenant in the system."""
+    serializer_class = TenantSerializer

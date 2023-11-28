@@ -149,3 +149,15 @@ class PrivateItemApiTests(TestCase):
         for key in payload.keys():
             self.assertEqual(payload[key], getattr(item, key))
         self.assertEqual(item.tenant, self.tenant)
+
+    def test_update_tenant_returns_error(self):
+        """Test changing the item tenant results in an error."""
+        new_tenant = create_tenant(email='tenant2@example.com', password='password123')
+        item = create_item(tenant=self.tenant)
+
+        payload = {'tenant': new_tenant.id}
+        url = detail_url(item.id)
+        self.client.patch(url, payload)
+
+        item.refresh_from_db()
+        self.assertEqual(item.tenant, self.tenant)

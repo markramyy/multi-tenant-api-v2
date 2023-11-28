@@ -1,23 +1,23 @@
 """
-Tests for the tenants models.
+Tests for models.
 """
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 
-class TestTenantsModels(TestCase):
-    """Test the tenants models."""
+class TestUsersModels(TestCase):
+    """Test models."""
 
-    def test_create_tenant_with_email_successful(self):
-        """Test creating a new tenant with a email is successful."""
+    def test_create_user_with_email_successful(self):
+        """Test creating a new user with a email is successful."""
 
         email = 'test@example.com'
         password = 'testpass123'
-        tenant = get_user_model().objects.create_user(
+        user = get_user_model().objects.create_user(
             email=email,
             password=password
         )
 
-        self.assertEqual(tenant.email, email)
-        self.assertTrue(tenant.check_password(password))
+        self.assertEqual(user.email, email)
+        self.assertTrue(user.check_password(password))

@@ -7,7 +7,7 @@
 
 1. [[#How to use it]]
 
-2. [[#Brief explanation]]
+2. [Brief explanation](#brief-explanation)
 
 3. [[#Documentation]]
 

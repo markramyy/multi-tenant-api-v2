@@ -5,11 +5,11 @@
 
 ---
 
-1. [[#How to use it]]
+1. [How to use it](#how-to-use-it)
 
 2. [Brief explanation](#brief-explanation)
 
-3. [[#Documentation]]
+3. [Documentation](#documentation)
 
 ---
 ### How to use it

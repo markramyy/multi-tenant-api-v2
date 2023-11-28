@@ -171,3 +171,14 @@ class PrivateItemApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Item.objects.filter(id=item.id).exists())
+
+    def test_delete_other_tenant_item_error(self):
+        """Test trying to delete another users recipe returns an error."""
+        new_tenant = create_tenant(email='tenant2@example.com', password='test123')
+        item = create_item(tenant=new_tenant)
+
+        url = detail_url(item.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(Item.objects.filter(id=item.id).exists())

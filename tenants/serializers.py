@@ -16,4 +16,4 @@ class TenantSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create and return a tenant with encrypted password."""
-        return get_user_model().objects.create_tenant(**validated_data)
+        return get_user_model().objects.create_user(**validated_data)

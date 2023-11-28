@@ -14,7 +14,7 @@ CREATE_TENANT_URL = reverse('tenants:create')
 
 def create_tenant(**params):
     """Create and return a new tenant."""
-    return get_user_model().objects.create_tenant(**params)
+    return get_user_model().objects.create_user(**params)
 
 
 class PublicTenantApiTests(TestCase):
@@ -23,7 +23,7 @@ class PublicTenantApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def test_create_valid_tenant_success(self):
+    def test_create_tenant_success(self):
         """Test creating a tenant is successful."""
         payload = {
             'email': 'test@example.com',

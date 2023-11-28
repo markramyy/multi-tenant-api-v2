@@ -146,8 +146,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'LMS API',
-    'DESCRIPTION': 'API for all things …',
+    'TITLE': 'Multi Tenants API',
+    'DESCRIPTION': 'API for Multi Tenants and their Items',
     'VERSION': '1.0.0',
     # OTHER SETTINGS
 }

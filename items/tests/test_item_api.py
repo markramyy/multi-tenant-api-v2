@@ -126,3 +126,26 @@ class PrivateItemApiTests(TestCase):
         self.assertEqual(item.name, payload['name'])
         self.assertEqual(item.price, original_price)
         self.assertEqual(item.tenant, self.tenant)
+
+    def test_full_update_item(self):
+        """Test updating an item with put."""
+        item = create_item(
+            tenant=self.tenant,
+            name='Item Name',
+            price=Decimal('5.00'),
+            description='Sample description',
+        )
+
+        payload = {
+            'name': 'New Item Name',
+            'price': Decimal('10.00'),
+            'description': 'New description',
+        }
+        url = detail_url(item.id)
+        res = self.client.put(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        item.refresh_from_db()
+        for key in payload.keys():
+            self.assertEqual(payload[key], getattr(item, key))
+        self.assertEqual(item.tenant, self.tenant)

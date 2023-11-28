@@ -18,6 +18,17 @@ class TenantSerializer(serializers.ModelSerializer):
         """Create and return a tenant with encrypted password."""
         return get_user_model().objects.create_user(**validated_data)
 
+    def update(self, instance, validated_data):
+        """Update and return a tenant with encrypted password."""
+        password = validated_data.pop('password', None)
+        tenant = super().update(instance, validated_data)
+
+        if password:
+            tenant.set_password(password)
+            tenant.save()
+
+        return tenant
+
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for the tenant auth token."""

@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 
-CREATE_TENANT_URL = reverse('tenant:create')
+CREATE_TENANT_URL = reverse('tenants:create')
 
 
 def create_tenant(**params):

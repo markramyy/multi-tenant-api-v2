@@ -161,3 +161,13 @@ class PrivateItemApiTests(TestCase):
 
         item.refresh_from_db()
         self.assertEqual(item.tenant, self.tenant)
+
+    def test_delete_item(self):
+        """Test deleting an item."""
+        item = create_item(tenant=self.tenant)
+
+        url = detail_url(item.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Item.objects.filter(id=item.id).exists())

@@ -84,11 +84,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'tenantsdb',
+    'USER': 'markramyy',
+    'PASSWORD': '3lGLTgyDJAS5',
+    'HOST': 'ep-small-sea-83795301.us-east-2.aws.neon.tech',
+    'PORT': '5432',
+    'OPTIONS': {'sslmode': 'require'},
+  }
 }
 
 
@@ -137,4 +143,11 @@ AUTH_USER_MODEL = 'core.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'LMS API',
+    'DESCRIPTION': 'API for all things …',
+    'VERSION': '1.0.0',
+    # OTHER SETTINGS
 }

@@ -97,3 +97,18 @@ class PrivateItemApiTests(TestCase):
 
         serializer = ItemDetailSerializer(item)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_item(self):
+        """Test creating an item."""
+        payload = {
+            'name': 'Sample Item',
+            'price': Decimal('5.00'),
+            'description': 'Sample description',
+        }
+        res = self.client.post(ITEMS_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        item = Item.objects.get(id=res.data['id']) # retrieve the item from the database
+        for key in payload.keys():
+            self.assertEqual(payload[key], getattr(item, key)) # retrieve the value of the attribute
+        self.assertEqual(item.tenant, self.tenant)

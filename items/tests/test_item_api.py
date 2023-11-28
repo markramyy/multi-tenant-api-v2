@@ -49,7 +49,7 @@ class PrivateItemApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.tenant = get_user_model().objects.create_tenant(
+        self.tenant = get_user_model().objects.create_user(
             'tenant@example.com',
             'testpass123',
         )
@@ -69,7 +69,7 @@ class PrivateItemApiTests(TestCase):
 
     def test_items_limited_to_tenant(self):
         """Test list of items is limited to the authenticated tenant."""
-        other_tenant = get_user_model().objects.create_tenant(
+        other_tenant = get_user_model().objects.create_user(
             'other@example.com',
             'password123',
         )

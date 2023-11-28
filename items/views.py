@@ -26,3 +26,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             return serializers.ItemSerializer
 
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Create a new item."""
+        serializer.save(tenant=self.request.user)

@@ -11,6 +11,7 @@ from rest_framework import status
 
 CREATE_TENANT_URL = reverse('tenants:create')
 TOKEN_URL = reverse('tenants:token')
+ME_URL = reverse('tenants:me')
 
 
 def create_tenant(**params):
@@ -100,3 +101,52 @@ class PublicTenantApiTests(TestCase):
 
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retrieve_user_unauthorized(self):
+        """Test authentication is required for users."""
+        res = self.client.get(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class PrivateTenantApiTests(TestCase):
+    """Test API requests that require authentication."""
+
+    def setUp(self):
+        self.tenant = create_tenant(
+            email='test@example.com',
+            password='testpass123',
+            name='Test Name',
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_retrieve_profile_success(self):
+        """Test retrieving profile for logged in tenant."""
+        res = self.client.get(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, {
+            'name': self.tenant.name,
+            'email': self.tenant.email,
+        })
+
+    def test_post_me_not_allowed(self):
+        """Test that POST is not allowed on the me endpoint."""
+        res = self.client.post(ME_URL, {})
+
+        self.assertEqual(
+            res.status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
+
+    def test_update_tenant_profile(self):
+        """Test updating the tenant profile for authenticated user."""
+        payload = {'name': 'New Name', 'password': 'newpass123'}
+
+        res = self.client.patch(ME_URL, payload)
+
+        self.tenant.refresh_from_db()
+        self.assertEqual(self.tenant.name, payload['name'])
+        self.assertTrue(self.tenant.check_password(payload['password']))
+        self.assertEqual(res.status_code, status.HTTP_200_OK)

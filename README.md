@@ -115,6 +115,6 @@ $ python manage.py runserver
 
 - if you have come from a non technical background and can't fully understand the code that has been written. I suggest for you to go and read the **Documentation.md** file that have been attached to the project.
 
-- [[Documentation.md]]
+- [Documentation](Documentation.md)
 
 ---

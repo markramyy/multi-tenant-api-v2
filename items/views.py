@@ -1,3 +1,21 @@
-from django.shortcuts import render
+"""
+Views for items APIs.
+"""
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from core.models import Item
+from items import serializers
+
+
+class ItemViewSet(viewsets.ModelViewSet):
+    """Manage items in the database."""
+    serializer_class = serializers.ItemSerializer
+    queryset = Item.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Return objects for the current authenticated tenant only."""
+        return self.queryset.filter(tenant=self.request.user).order_by('-id')

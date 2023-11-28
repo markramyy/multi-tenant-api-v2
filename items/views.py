@@ -11,7 +11,7 @@ from items import serializers
 
 class ItemViewSet(viewsets.ModelViewSet):
     """Manage items in the database."""
-    serializer_class = serializers.ItemSerializer
+    serializer_class = serializers.ItemDetailSerializer
     queryset = Item.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -20,7 +20,7 @@ class ItemViewSet(viewsets.ModelViewSet):
         """Return objects for the current authenticated tenant only."""
         return self.queryset.filter(tenant=self.request.user).order_by('-id')
 
-    def get_serializer(self):
+    def get_serializer_class(self):
         """Return the serializer class for request."""
         if self.action == 'list':
             return serializers.ItemSerializer
